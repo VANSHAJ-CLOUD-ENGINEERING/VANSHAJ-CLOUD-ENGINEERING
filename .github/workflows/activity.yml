@@ -1,0 +1,33 @@
+# ═══════════════════════════════════════════════════════════
+#  GitHub Activity — Auto-updates the activity section
+#  Shows: pushes, PRs, issues, releases, stars given, etc.
+#
+#  NO SETUP REQUIRED — uses GITHUB_TOKEN automatically
+# ═══════════════════════════════════════════════════════════
+
+name: 📡 Update GitHub Activity
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # Every 30 minutes
+  workflow_dispatch:           # Run manually from Actions tab
+
+jobs:
+  update-activity:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📡 Update activity in README
+        uses: jamesgeorge007/github-activity-readme@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          COMMIT_MSG: '📡 Auto-update GitHub activity [skip ci]'
+          MAX_LINES: 6
+          README_FILE: 'README.md'
+          TARGET_COMMENTS: 'START_SECTION:activity'

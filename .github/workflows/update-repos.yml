@@ -1,0 +1,187 @@
+# ═══════════════════════════════════════════════════════════
+#  Auto Repos — Updates Recently Updated Projects section
+#  and Smart Category section every hour automatically.
+#
+#  HOW SMART CATEGORIES WORK:
+#    Tag your GitHub repos with these Topics:
+#      aws        → ☁️ Cloud & AWS
+#      terraform  → 🏗️ Infrastructure as Code
+#      docker     → 🐳 Containers
+#      linux      → 🐧 Linux & Shell
+#      devops     → ⚙️ DevOps & CI/CD
+#
+#  NO SETUP REQUIRED — uses GITHUB_TOKEN automatically
+# ═══════════════════════════════════════════════════════════
+
+name: 🚀 Update Repos & Categories
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # Every hour
+  workflow_dispatch:        # Run manually from Actions tab
+  push:
+    branches: [main]
+
+jobs:
+  update-repos:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install dependencies
+        run: pip install requests
+
+      - name: 🚀 Update README sections
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 << 'PYEOF'
+          import requests
+          import re
+          import os
+          from datetime import datetime, timezone
+
+          USERNAME = "VANSHAJ-CLOUD-ENGINEERING"
+          TOKEN = os.environ["GITHUB_TOKEN"]
+          HEADERS = {
+              "Authorization": f"token {TOKEN}",
+              "Accept": "application/vnd.github+json"
+          }
+
+          # ─────────────────────────────────────────────
+          # 1. Fetch all public non-fork repos
+          # ─────────────────────────────────────────────
+          all_repos = []
+          page = 1
+          while True:
+              resp = requests.get(
+                  f"https://api.github.com/users/{USERNAME}/repos"
+                  f"?sort=updated&per_page=100&type=public&page={page}",
+                  headers=HEADERS
+              )
+              data = resp.json()
+              if not data:
+                  break
+              all_repos.extend([r for r in data if not r.get("fork", False)])
+              if len(data) < 100:
+                  break
+              page += 1
+
+          # Sort by last update
+          all_repos.sort(key=lambda r: r["updated_at"], reverse=True)
+
+          # ─────────────────────────────────────────────
+          # 2. Build Recently Updated section (top 6)
+          # ─────────────────────────────────────────────
+          recent = all_repos[:6]
+          rows = [
+              "| 📁 Repository | 📝 Description | ⭐ Stars | 🕒 Updated |",
+              "|:---|:---|:---:|:---:|"
+          ]
+          for r in recent:
+              updated = r["updated_at"][:10]
+              desc = (r["description"] or "No description yet")[:65]
+              name = r["name"]
+              url  = r["html_url"]
+              stars = r["stargazers_count"]
+              rows.append(f"| [**{name}**]({url}) | {desc} | {stars} | `{updated}` |")
+
+          repos_section = "\n".join(rows)
+
+          # ─────────────────────────────────────────────
+          # 3. Build Smart Categorized section by topics
+          # ─────────────────────────────────────────────
+          CATEGORIES = {
+              "aws":       ("☁️ Cloud & AWS",              "FF9900"),
+              "terraform": ("🏗️ Infrastructure as Code",   "7B42BC"),
+              "docker":    ("🐳 Containers & Docker",      "2496ED"),
+              "linux":     ("🐧 Linux & Shell Scripting",  "FCC624"),
+              "devops":    ("⚙️ DevOps & CI/CD",           "005BEA"),
+          }
+
+          bucketed = {key: [] for key in CATEGORIES}
+          uncategorized = []
+
+          for r in all_repos:
+              # Fetch topics for each repo
+              t_resp = requests.get(
+                  f"https://api.github.com/repos/{USERNAME}/{r['name']}/topics",
+                  headers={**HEADERS, "Accept": "application/vnd.github.mercy-preview+json"}
+              )
+              topics = t_resp.json().get("names", [])
+              matched = False
+              for key in CATEGORIES:
+                  if key in topics:
+                      bucketed[key].append(r)
+                      matched = True
+                      break
+              if not matched:
+                  uncategorized.append(r)
+
+          cat_lines = []
+          for key, (label, _) in CATEGORIES.items():
+              repos_in_cat = bucketed[key]
+              if not repos_in_cat:
+                  continue
+              cat_lines.append(f"\n### {label}\n")
+              cat_lines.append("| Repository | Description | ⭐ | Updated |")
+              cat_lines.append("|:---|:---|:---:|:---:|")
+              for r in repos_in_cat[:5]:
+                  updated = r["updated_at"][:10]
+                  desc = (r["description"] or "—")[:55]
+                  cat_lines.append(
+                      f"| [**{r['name']}**]({r['html_url']}) | {desc} | {r['stargazers_count']} | `{updated}` |"
+                  )
+
+          if not cat_lines:
+              cat_lines = [
+                  "> No categorized repositories yet.",
+                  "> Add topics like `aws`, `terraform`, `docker`, `linux`, `devops` to your repos on GitHub!"
+              ]
+
+          cat_section = "\n".join(cat_lines)
+
+          # ─────────────────────────────────────────────
+          # 4. Write both sections into README.md
+          # ─────────────────────────────────────────────
+          with open("README.md", "r", encoding="utf-8") as f:
+              content = f.read()
+
+          # Update repos section
+          content = re.sub(
+              r"<!--START_SECTION:repos-->.*?<!--END_SECTION:repos-->",
+              f"<!--START_SECTION:repos-->\n{repos_section}\n<!--END_SECTION:repos-->",
+              content,
+              flags=re.DOTALL
+          )
+
+          # Update categorized section
+          content = re.sub(
+              r"<!--START_SECTION:categorized-->.*?<!--END_SECTION:categorized-->",
+              f"<!--START_SECTION:categorized-->{cat_section}\n<!--END_SECTION:categorized-->",
+              content,
+              flags=re.DOTALL
+          )
+
+          with open("README.md", "w", encoding="utf-8") as f:
+              f.write(content)
+
+          print(f"✅ Updated: {len(recent)} recent repos, {sum(len(v) for v in bucketed.values())} categorized repos")
+          PYEOF
+
+      - name: 💾 Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git diff --staged --quiet || git commit -m "🚀 Auto-update repos & categories [skip ci]"
+          git push
