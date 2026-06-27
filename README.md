@@ -598,7 +598,10 @@ graph LR
 <!--START_SECTION:repos-->
 | 📁 Repository | 📝 Description | ⭐ Stars | 🕒 Updated |
 |:---|:---|:---:|:---:|
-| **Initializing...** | Run the `update-repos` workflow to populate this section | — | — |
+| [**VANSHAJ-CLOUD-ENGINEERING**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/VANSHAJ-CLOUD-ENGINEERING) | No description yet | 0 | `2026-06-27` |
+| [**Cloud-Monitoring-Dashboard**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/Cloud-Monitoring-Dashboard) | No description yet | 0 | `2026-06-26` |
+| [**terraform-aws-infrastructure**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/terraform-aws-infrastructure) | No description yet | 0 | `2026-06-26` |
+| [**aws-cloud-portfolio-website-hosting**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/aws-cloud-portfolio-website-hosting) | Built and deployed a personal portfolio website on AWS S3 to gain | 0 | `2026-06-08` |
 <!--END_SECTION:repos-->
 
 <br/>
@@ -619,9 +622,8 @@ graph LR
 
 <br/>
 
-<!--START_SECTION:categorized-->
-> **Run the `update-repos` workflow to auto-populate categories.**
-> Tag your repositories with topics like `aws`, `terraform`, `docker`, `linux` on GitHub to enable smart grouping.
+<!--START_SECTION:categorized-->> No categorized repositories yet.
+> Add topics like `aws`, `terraform`, `docker`, `linux`, `devops` to your repos on GitHub!
 <!--END_SECTION:categorized-->
 
 <br/>
