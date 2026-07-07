@@ -598,12 +598,12 @@ graph LR
 <!--START_SECTION:repos-->
 | 📁 Repository | 📝 Description | ⭐ Stars | 🕒 Updated |
 |:---|:---|:---:|:---:|
+| [**devops-aws-assignment**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/devops-aws-assignment) | No description yet | 0 | `2026-07-07` |
 | [**VANSHAJ-CLOUD-ENGINEERING**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/VANSHAJ-CLOUD-ENGINEERING) | No description yet | 0 | `2026-07-07` |
 | [**CI-CD-with-GitHub-Actions-Docker-AWS-EC2**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/CI-CD-with-GitHub-Actions-Docker-AWS-EC2) | No description yet | 0 | `2026-07-04` |
 | [**cloud-and-devops-portfolio**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/cloud-and-devops-portfolio) | No description yet | 0 | `2026-07-03` |
 | [**aws-python-automation**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/aws-python-automation) | A beginner-friendly AWS infrastructure automation toolkit built w | 0 | `2026-07-02` |
 | [**Cloud-Monitoring-Dashboard**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/Cloud-Monitoring-Dashboard) | No description yet | 0 | `2026-06-26` |
-| [**terraform-aws-infrastructure**](https://github.com/VANSHAJ-CLOUD-ENGINEERING/terraform-aws-infrastructure) | No description yet | 0 | `2026-06-26` |
 <!--END_SECTION:repos-->
 
 <br/>
