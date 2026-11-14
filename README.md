@@ -647,7 +647,7 @@ graph LR
 <br/>
 
 <!--START_SECTION:activity-->
-1. 🗣 Commented on [#39726](https://github.com/aws/aws-cdk/issues/39726#issuecomment-6872772389) in [aws/aws-cdk](https://github.com/aws/aws-cdk)
+1. 🗣 Commented on [#39726](https://github.com/aws/aws-cdk/issues/39726#issuecomment-6873549657) in [aws/aws-cdk](https://github.com/aws/aws-cdk)
 <!--END_SECTION:activity-->
 
 <br/>
